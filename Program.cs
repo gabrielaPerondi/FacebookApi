@@ -1,20 +1,28 @@
 using FacebookDb.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<FacebookContext>(options=> options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
+builder.Services.AddDbContext<FacebookContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao"))
+);
 
-// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Adicionar CORS antes do Build
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowAll",
+        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    );
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -22,7 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAll"); // habilita CORS
 app.UseAuthorization();
 
 app.MapControllers();

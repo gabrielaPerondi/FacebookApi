@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FacebookDb.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class FacebookController : ControllerBase
     {
         private readonly FacebookContext _context;
@@ -18,29 +20,56 @@ namespace FacebookDb.Controllers
             _context = context;
         }
 
-        // POST /api/usuarios → cadastrar usuário.=============
-        // GET /api/usuarios → listar usuários.===============
-        // POST /api/posts → criar um post.
-        // GET /api/posts → listar posts com autor e curtidas. --NÃO TERÁ  --
-        // POST /api/posts/{id}/curtir → curtir um post.
 
         [HttpGet("RetornaUsuario")]
         public async Task<IActionResult> GetUsuario()
         {
-            var usuario = await _context.Facebook.ToListAsync();//permitindo que o servidor atenda outras requisições ao mesmo tempo.
+            var usuario = await _context.Usuarios.ToListAsync();//permitindo que o servidor atenda outras requisições ao mesmo tempo.
+            return Ok(usuario);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Getid(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);//permitindo que o servidor atenda outras requisições ao mesmo tempo.
+            if (usuario == null)
+            {
+                return NotFound();
+            }
             return Ok(usuario);
         }
 
         [HttpPost("CriaUsuario")]
         public async Task<IActionResult> CriarUsuarioFace(Usuario usuario)
         {
-            _context.Facebook.Add(usuario);
+            _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
-        [HttpGet]
 
+        [HttpPut]
+        public async Task<IActionResult> Atualizar(int id, Usuario usuario)
+        {
+            _context.Entry(usuario).State = EntityState.Modified;//todos os campos sejam atualizados no banco.”
+            await _context.SaveChangesAsync();
 
-        
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+       
     }
 }
