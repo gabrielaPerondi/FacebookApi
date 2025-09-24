@@ -167,3 +167,4 @@ C:\Users\429410624\Documents\API\FacebookDb\obj\Debug\net8.0\refint\FacebookDb.d
 C:\Users\429410624\Documents\API\FacebookDb\obj\Debug\net8.0\FacebookDb.pdb
 C:\Users\429410624\Documents\API\FacebookDb\obj\Debug\net8.0\FacebookDb.genruntimeconfig.cache
 C:\Users\429410624\Documents\API\FacebookDb\obj\Debug\net8.0\ref\FacebookDb.dll
+C:\Users\429410624\Documents\API\FacebookDb\bin\Debug\net8.0\FacebookDb.staticwebassets.runtime.json

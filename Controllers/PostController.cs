@@ -25,47 +25,98 @@ namespace FacebookDb.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPost()
         {
-            var post = await _context.Posts.Include(pessoa => pessoa.Usuario).ToListAsync(); //traz o usuario da conta junto
+            var post = await _context.Posts.Include(pessoapost => pessoapost.Usuario).ToListAsync(); //traz o usuario da conta junto
+            return Ok(post);
+        }
+
+        //GETID******************
+        [HttpGet("{id}")]
+        public IActionResult ObterPorId(int id)
+        {
+            var post = _context.Posts.Find(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
             return Ok(post);
         }
 
         // POST****************
         [HttpPost("upload")]
-        public async Task<IActionResult> Post(
-            [FromForm] string fotoUrl, // URL da imagem
-            [FromForm] string legenda, // legenda do post
-            [FromForm] int usuarioId)
+        public async Task<IActionResult> CreateAsync([FromForm] Criarpost criarpost, IFormFile file)
         {
-            var post = new Post
+            try
             {
-                Legenda = legenda,
-                FotoUrl = fotoUrl, // agora é só o link
-                UsuarioId = usuarioId,
-            };
+                var post = new Post
+                {
+                    Legenda = criarpost.Legenda,
+                    UsuarioId = criarpost.UsuarioId,
+                };
 
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+                // salvar imagem
+                if (file != null && file.Length > 0)
+                {
+                    var uploadsPath = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot/images"
+                    );
+                    if (!Directory.Exists(uploadsPath))
+                        Directory.CreateDirectory(uploadsPath);
 
-            return Ok(post);
+                    var fileNome = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = Path.Combine(uploadsPath, file.FileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    post.FotoUrl = "/images/" + file.FileName;
+                }
+
+                _context.Posts.Add(post);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(ObterPorId), new { id = post.Id }, post);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT*********************
         [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarPost(int id, Post post)
+        public async Task<IActionResult> AtualizarPost(
+            int id,
+            [FromForm] Criarpost atualizarPost,
+            IFormFile? file
+        )
         {
-            if (id != post.Id)
-                return BadRequest();
-
             var postDb = await _context.Posts.FindAsync(id);
             if (postDb == null)
                 return NotFound();
 
-            postDb.Legenda = post.Legenda;
-            postDb.FotoUrl = post.FotoUrl;
-            postDb.UsuarioId = post.UsuarioId;
+            postDb.Legenda = atualizarPost.Legenda;
+            postDb.UsuarioId = atualizarPost.UsuarioId;
+
+            if (file != null && file.Length > 0)
+            {
+                var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadsPath))
+                    Directory.CreateDirectory(uploadsPath);
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(stream);
+
+                postDb.FotoUrl = "/images/" + fileName;
+            }
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(postDb); // Retorna o post atualizado
         }
 
         [HttpDelete("{id}")]
@@ -74,11 +125,11 @@ namespace FacebookDb.Controllers
             var Post = await _context.Posts.FindAsync(id);
             if (Post == null)
             {
-                return NotFound();
+                return NotFound(new { message = $"Post com ID {id} não encontrado." });
             }
             _context.Posts.Remove(Post);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(new { message = "Post deletado com sucesso", postId = id });
         }
     }
 }

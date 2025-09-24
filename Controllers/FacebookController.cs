@@ -20,19 +20,17 @@ namespace FacebookDb.Controllers
             _context = context;
         }
 
-
         [HttpGet("RetornaUsuario")]
         public async Task<IActionResult> GetUsuario()
         {
-            var usuario = await _context.Usuarios.ToListAsync();//permitindo que o servidor atenda outras requisições ao mesmo tempo.
+            var usuario = await _context.Usuarios.ToListAsync(); //permitindo que o servidor atenda outras requisições ao mesmo tempo.
             return Ok(usuario);
         }
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Getid(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);//permitindo que o servidor atenda outras requisições ao mesmo tempo.
+            var usuario = await _context.Usuarios.FindAsync(id); //permitindo que o servidor atenda outras requisições ao mesmo tempo.
             if (usuario == null)
             {
                 return NotFound();
@@ -48,10 +46,25 @@ namespace FacebookDb.Controllers
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] Login login)
+        {
+            // Busca usuário pelo email
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u =>
+                u.Email == login.Email && u.Senha == login.Senha
+            );
+
+            if (usuario == null)
+                return Unauthorized("Email ou senha incorretos");
+
+            // Retorna o usuário (ou um token se quiser avançar)
+            return Ok(usuario);
+        }
+
         [HttpPut]
         public async Task<IActionResult> Atualizar(int id, Usuario usuario)
         {
-            _context.Entry(usuario).State = EntityState.Modified;//todos os campos sejam atualizados no banco.”
+            _context.Entry(usuario).State = EntityState.Modified; //todos os campos sejam atualizados no banco.”
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -69,7 +82,5 @@ namespace FacebookDb.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
-       
     }
 }
