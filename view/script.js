@@ -1,8 +1,6 @@
-const apiUrl = "http://localhost:5295/api/post"; // GET todos os posts
-const apiPostUpload = "http://localhost:5295/api/post/upload"; // POST criar post
+const API_FACEBOOK = "http://localhost:5295/api/Facebook";
+const API_POST = "http://localhost:5295/api/Post";
 
-
-// Função para criar usuário
 const usuarioForm = document.getElementById("usuarioForm");
 usuarioForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -12,31 +10,60 @@ usuarioForm.addEventListener("submit", async (e) => {
     const senha = document.getElementById("senha").value;
 
     try {
-        const response = await fetch(`${apiUrl}/Facebook/CriaUsuario`, {
+        const response = await fetch(`${API_FACEBOOK}/CriaUsuario`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nome, email, senha })
         });
 
-        if (!response.ok) throw new Error("Erro ao criar usuário");
 
-        alert("Usuário criado com sucesso!");
+        if (!response.ok) throw new Error("Erro ao cadastrar usuário");
+
+        alert("Usuário cadastrado com sucesso!");
         usuarioForm.reset();
     } catch (err) {
         alert(err.message);
     }
 });
 
-// função para criar post
+const loginForm = document.getElementById("loginForm");
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value;
+    const senha = document.getElementById("loginSenha").value;
+
+    try {
+        const response = await fetch(`${API_FACEBOOK}/Login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ Email: email, Senha: senha })
+        });
+
+        if (!response.ok) throw new Error("Email ou senha incorretos");
+
+        const usuario = await response.json();
+
+        document.getElementById("loginStatus").innerText = `Logado como: ${usuario.nome}`;
+        localStorage.setItem("usuarioId", usuario.id); // salva para criar posts depois
+        loginForm.reset();
+    } catch (err) {
+        alert(err.message);
+    }
+});
+
 const postForm = document.getElementById("postForm");
 postForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const legenda = document.getElementById("legenda").value;
-    const usuarioId = document.getElementById("usuarioId").value;
+    const usuarioId = localStorage.getItem("usuarioId"); // pega do login
     const foto = document.getElementById("foto").files[0];
+
+    if (!usuarioId) {
+        alert("Você precisa estar logado para postar!");
+        return;
+    }
 
     const formData = new FormData();
     formData.append("Legenda", legenda);
@@ -44,28 +71,27 @@ postForm.addEventListener("submit", async (e) => {
     if (foto) formData.append("file", foto);
 
     try {
-        const response = await fetch(`${API_BASE}/Post/upload`, {
+        const response = await fetch(`${API_POST}/Post`, {
             method: "POST",
             body: formData
         });
 
         if (!response.ok) throw new Error("Erro ao criar post");
 
-        alert("Post criado com sucesso!");
+        alert("Post criado com sucesso");
         postForm.reset();
-        carregarPosts(); // atualizar lista de posts
+        carregarPosts();
     } catch (err) {
         alert(err.message);
     }
 });
 
-// --------------- Função para listar posts ---------------
 async function carregarPosts() {
     const container = document.getElementById("postsContainer");
     container.innerHTML = "";
 
     try {
-        const response = await fetch(`${API_BASE}/Post`);
+        const response = await fetch(`${API_POST}`);
         if (!response.ok) throw new Error("Erro ao buscar posts");
 
         const posts = await response.json();
@@ -77,7 +103,7 @@ async function carregarPosts() {
 
             div.innerHTML = `
                 <p><strong>Legenda:</strong> ${post.legenda}</p>
-                <p><strong>Usuário:</strong> ${post.usuario?.nome}</p>
+                <p><strong>Usuário:</strong> ${post.usuario?.nome ?? "Desconhecido"}</p>
                 ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" width="200" />` : ""}
             `;
 
@@ -88,5 +114,5 @@ async function carregarPosts() {
     }
 }
 
-// Carregar posts ao iniciar
+// Carregar posts ao abrir a página
 carregarPosts();

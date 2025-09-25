@@ -3,30 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Facebook</title>
+    <title>Facebook</title>
 </head>
 <body>
     <h1>Facebook</h1>
 
-    <!-- usuario -->
-    <h2>Criar Usuário</h2>
+     <!-- Cadastro -->
+    <h2>Cadastrar Usuário</h2>
     <form id="usuarioForm">
-        <input type="text" id="nome" placeholder="Nome" required />
-        <input type="email" id="email" placeholder="Email" required />
-        <input type="password" id="senha" placeholder="Senha" required />
-        <button type="submit">Criar Usuário</button>
+        <input type="text" id="nome" placeholder="Nome" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="senha" placeholder="Senha" required>
+        <button type="submit">Cadastrar</button>
     </form>
 
-    <!--Post -->
+    <hr>
+
+    <!-- Login -->
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginSenha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+    </form>
+
+    <p id="loginStatus"></p>
+
+    <hr>
+
+    <!-- Criar Post -->
     <h2>Criar Post</h2>
     <form id="postForm">
-        <input type="text" id="legenda" placeholder="Legenda" required />
-        <input type="number" id="usuarioId" placeholder="ID do Usuário" required />
-        <input type="file" id="foto" accept="image/*" />
-        <button type="submit">Criar Post</button>
+        <input type="text" id="legenda" placeholder="Legenda" required>
+        <input type="file" id="foto">
+        <button type="submit">Postar</button>
     </form>
 
-    <!-- Lista Posts -->
+    <hr>
+
+    <!-- Lista de posts -->
     <h2>Posts</h2>
     <div id="postsContainer"></div>
 

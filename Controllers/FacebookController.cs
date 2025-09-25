@@ -49,17 +49,16 @@ namespace FacebookDb.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
-            // Busca usuário pelo email
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u =>
-                u.Email == login.Email && u.Senha == login.Senha
-            );
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => 
+                u.Email.ToLower() == login.Email.ToLower() && 
+                u.Senha == login.Senha); // senha normalmente não se altera
 
-            if (usuario == null)
+             if (usuario == null)
                 return Unauthorized("Email ou senha incorretos");
 
-            // Retorna o usuário (ou um token se quiser avançar)
             return Ok(usuario);
         }
+
 
         [HttpPut]
         public async Task<IActionResult> Atualizar(int id, Usuario usuario)
