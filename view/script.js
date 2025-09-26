@@ -1,6 +1,7 @@
 const API_FACEBOOK = "http://localhost:5295/api/Facebook";
 const API_POST = "http://localhost:5295/api/Post";
 
+// cadastrar usuario
 const usuarioForm = document.getElementById("usuarioForm");
 usuarioForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -25,7 +26,7 @@ usuarioForm.addEventListener("submit", async (e) => {
         alert(err.message);
     }
 });
-
+// login de usuario
 const loginForm = document.getElementById("loginForm");
 loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -51,7 +52,7 @@ loginForm.addEventListener("submit", async (e) => {
         alert(err.message);
     }
 });
-
+/// postar
 const postForm = document.getElementById("postForm");
 postForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -71,7 +72,7 @@ postForm.addEventListener("submit", async (e) => {
     if (foto) formData.append("file", foto);
 
     try {
-        const response = await fetch(`${API_POST}/Post`, {
+        const response = await fetch(`${API_POST}/upload`, {
             method: "POST",
             body: formData
         });
@@ -86,12 +87,14 @@ postForm.addEventListener("submit", async (e) => {
     }
 });
 
+
+// 
 async function carregarPosts() {
     const container = document.getElementById("postsContainer");
     container.innerHTML = "";
 
     try {
-        const response = await fetch(`${API_POST}`);
+        const response = await fetch(API_POST);
         if (!response.ok) throw new Error("Erro ao buscar posts");
 
         const posts = await response.json();
@@ -102,8 +105,8 @@ async function carregarPosts() {
             div.style.margin = "10px 0";
 
             div.innerHTML = `
+             <p><strong>Usuário:</strong> ${post.usuario?.nome ?? "Desconhecido"}</p>
                 <p><strong>Legenda:</strong> ${post.legenda}</p>
-                <p><strong>Usuário:</strong> ${post.usuario?.nome ?? "Desconhecido"}</p>
                 ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" width="200" />` : ""}
             `;
 
@@ -113,6 +116,4 @@ async function carregarPosts() {
         container.innerHTML = `<p>${err.message}</p>`;
     }
 }
-
-// Carregar posts ao abrir a página
 carregarPosts();

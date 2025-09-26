@@ -42,7 +42,7 @@ namespace FacebookDb.Controllers
         }
 
         // POST****************
-        [HttpPost("upload")]
+         [HttpPost("upload")]
         public async Task<IActionResult> CreateAsync([FromForm] Criarpost criarpost, IFormFile file)
         {
             try
@@ -56,22 +56,25 @@ namespace FacebookDb.Controllers
                 // salvar imagem
                 if (file != null && file.Length > 0)
                 {
-                    var uploadsPath = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot/images"
-                    );
+                    var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+
                     if (!Directory.Exists(uploadsPath))
                         Directory.CreateDirectory(uploadsPath);
 
-                    var fileNome = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine(uploadsPath, file.FileName);
+                    // Garante que tenha extensão válida
+                    string[] allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".jfif" };
+                    var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                    if (string.IsNullOrEmpty(extension)) extension = ".jpg";
+
+                    var fileNome = Guid.NewGuid().ToString() + extension;
+                    var filePath = Path.Combine(uploadsPath, fileNome);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(stream);
                     }
 
-                    post.FotoUrl = "/images/" + file.FileName;
+                    post.FotoUrl = "/images/" + fileNome;
                 }
 
                 _context.Posts.Add(post);

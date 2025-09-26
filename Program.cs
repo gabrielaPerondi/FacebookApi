@@ -35,6 +35,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// habilitar arquivos estáticos (wwwroot)
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthorization();
