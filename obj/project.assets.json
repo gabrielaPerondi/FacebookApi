@@ -5107,19 +5107,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\429438624\\.nuget\\packages\\": {}
+    "C:\\Users\\429410624\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\FacebookDb.csproj",
+      "projectUniqueName": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\FacebookDb.csproj",
       "projectName": "FacebookDb",
-      "projectPath": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\FacebookDb.csproj",
-      "packagesPath": "C:\\Users\\429438624\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\obj\\",
+      "projectPath": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\FacebookDb.csproj",
+      "packagesPath": "C:\\Users\\429410624\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\429438624\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\429410624\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

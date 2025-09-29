@@ -130,6 +130,17 @@ namespace FacebookDb.Controllers
             {
                 return NotFound(new { message = $"Post com ID {id} não encontrado." });
             }
+            if (!string.IsNullOrEmpty(Post.FotoUrl))
+            {
+                var filePath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                 "wwwroot",
+                Post.FotoUrl.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
             _context.Posts.Remove(Post);
             await _context.SaveChangesAsync();
             return Ok(new { message = "Post deletado com sucesso", postId = id });

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "PRKnDBZyBA9uWv3C6QpQ3bldHgaRXmS5M1D8yDzuQio=",
+  "Hash": "cTgQnTv1X2cobcp7tNB8FGI/P7OdPTkuvVSFmVvWjM8=",
   "Source": "FacebookDb",
   "BasePath": "_content/FacebookDb",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "FacebookDb\\wwwroot",
       "Source": "FacebookDb",
-      "ContentRoot": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\images\\090fac7c-1a5a-4295-a747-739965523a58.png",
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\090fac7c-1a5a-4295-a747-739965523a58.png",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
       "RelativePath": "images/090fac7c-1a5a-4295-a747-739965523a58.png",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot\\images\\090fac7c-1a5a-4295-a747-739965523a58.png"
     },
     {
-      "Identity": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\images\\159dcc6c-adfe-43da-814b-20d52f9470de.jfif",
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\159dcc6c-adfe-43da-814b-20d52f9470de.jfif",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
       "RelativePath": "images/159dcc6c-adfe-43da-814b-20d52f9470de.jfif",
       "AssetKind": "All",
@@ -55,10 +55,48 @@
       "OriginalItemSpec": "wwwroot\\images\\159dcc6c-adfe-43da-814b-20d52f9470de.jfif"
     },
     {
-      "Identity": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\images\\599f39b2-ebda-4bfc-9545-8be75f61790f.png",
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\240cc754-319a-42e5-8db1-14f619b8f381.png",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
+      "BasePath": "_content/FacebookDb",
+      "RelativePath": "images/240cc754-319a-42e5-8db1-14f619b8f381.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\240cc754-319a-42e5-8db1-14f619b8f381.png"
+    },
+    {
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\5957dd73-af31-4cae-abd1-81887af3242a.png",
+      "SourceId": "FacebookDb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
+      "BasePath": "_content/FacebookDb",
+      "RelativePath": "images/5957dd73-af31-4cae-abd1-81887af3242a.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\5957dd73-af31-4cae-abd1-81887af3242a.png"
+    },
+    {
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\599f39b2-ebda-4bfc-9545-8be75f61790f.png",
+      "SourceId": "FacebookDb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
       "RelativePath": "images/599f39b2-ebda-4bfc-9545-8be75f61790f.png",
       "AssetKind": "All",
@@ -74,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\images\\599f39b2-ebda-4bfc-9545-8be75f61790f.png"
     },
     {
-      "Identity": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png",
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
       "RelativePath": "images/875eba83-cb10-48f1-9e5a-ee0806a822bf.png",
       "AssetKind": "All",
@@ -93,10 +131,10 @@
       "OriginalItemSpec": "wwwroot\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png"
     },
     {
-      "Identity": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\images\\facebook.png",
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\facebook.png",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\429438624\\Downloads\\FacebookDb\\FacebookApi\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
       "RelativePath": "images/facebook.png",
       "AssetKind": "All",

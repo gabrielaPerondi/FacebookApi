@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FacebookApi.Models;
 using FacebookDb.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ namespace FacebookDb.Context
 
         public DbSet<Usuario> Usuarios{ get; set; }
         public DbSet<Post> Posts { get; set; }
+        public DbSet<Curtida>Curtidas { get; set; }
+        public DbSet<Comentario>Comentarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)//cria tabelas para as entidades Usuario e Post.
         {
