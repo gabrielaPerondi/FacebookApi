@@ -207,7 +207,7 @@ const API_POST = "http://localhost:5295/api/Post";
 
 
 // CADASTRO
-const usuarioForm = document.getElementById("usuarioForm");
+const usuarioForm = document.getElementById("cadastroForm");
 if (usuarioForm) {
   usuarioForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -219,7 +219,11 @@ if (usuarioForm) {
       const response = await fetch(`${API_FACEBOOK}/CriaUsuario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, email, senha })
+        body: JSON.stringify({
+          Nome: nome,
+          Email: email,
+          Senha: senha
+        })
       });
       if (!response.ok) throw new Error("Erro ao cadastrar usuário");
       alert("Usuário cadastrado!");
@@ -229,6 +233,7 @@ if (usuarioForm) {
     }
   });
 }
+
 // LOGIN
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
@@ -238,11 +243,12 @@ if (loginForm) {
     const senha = document.getElementById("loginSenha").value;
 
     try {
-      const response = await fetch(`${API_FACEBOOK}/Login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ Email: email, Senha: senha })
-      });
+      const response = await fetch(`${API_FACEBOOK}/Login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ Email: email, Senha: senha })
+        });
 
       if (!response.ok) throw new Error("Email ou senha incorretos");
       const usuario = await response.json();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FacebookDb.Migrations
 {
     /// <inheritdoc />
-    public partial class TerceiraM : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,7 +33,7 @@ namespace FacebookDb.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Conteudo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Legenda = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UsuarioId = table.Column<int>(type: "int", nullable: false)
@@ -48,6 +48,44 @@ namespace FacebookDb.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Interacaos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Tipo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Texto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostId = table.Column<int>(type: "int", nullable: false),
+                    DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Interacaos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Interacaos_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Interacaos_Usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interacaos_PostId",
+                table: "Interacaos",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Interacaos_UsuarioId",
+                table: "Interacaos",
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UsuarioId",
@@ -65,6 +103,9 @@ namespace FacebookDb.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Interacaos");
+
             migrationBuilder.DropTable(
                 name: "Posts");
 

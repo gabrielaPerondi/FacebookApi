@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FacebookDb.Migrations
 {
     [DbContext(typeof(FacebookContext))]
-    [Migration("20250923190023_TerceiraM")]
-    partial class TerceiraM
+    [Migration("20250930195706_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,39 @@ namespace FacebookDb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FacebookDb.Models.Interacao", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataCriacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Texto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Interacaos");
+                });
+
             modelBuilder.Entity("FacebookDb.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -33,13 +66,13 @@ namespace FacebookDb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Conteudo")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FotoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Legenda")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
@@ -81,15 +114,37 @@ namespace FacebookDb.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("FacebookDb.Models.Interacao", b =>
+                {
+                    b.HasOne("FacebookDb.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FacebookDb.Models.Usuario", null)
+                        .WithMany("Interacoes")
+                        .HasForeignKey("UsuarioId");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("FacebookDb.Models.Post", b =>
                 {
                     b.HasOne("FacebookDb.Models.Usuario", "Usuario")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("FacebookDb.Models.Usuario", b =>
+                {
+                    b.Navigation("Interacoes");
+
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

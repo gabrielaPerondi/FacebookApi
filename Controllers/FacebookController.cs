@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using FacebookDb.Context;
 using FacebookDb.Models;
@@ -20,7 +21,7 @@ namespace FacebookDb.Controllers
             _context = context;
         }
 
-        [HttpGet("RetornaUsuario")]
+        [HttpGet]
         public async Task<IActionResult> GetUsuario()
         {
             var usuario = await _context.Usuarios.ToListAsync(); //permitindo que o servidor atenda outras requisições ao mesmo tempo.
@@ -49,33 +50,39 @@ namespace FacebookDb.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] Login login)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => 
-                u.Email.ToLower() == login.Email.ToLower() && 
-                u.Senha == login.Senha); // senha normalmente não se altera
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u =>
+                u.Email.ToLower() == login.Email.ToLower() && u.Senha == login.Senha
+            ); // senha normalmente não se altera
 
-             if (usuario == null)
+            if (usuario == null)
                 return Unauthorized("Email ou senha incorretos");
 
             return Ok(usuario);
         }
 
-
-        [HttpPut]
-        public async Task<IActionResult> Atualizar(int id, Usuario usuario)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, Usuario usuarioAtualizado)
         {
-            _context.Entry(usuario).State = EntityState.Modified; //todos os campos sejam atualizados no banco.”
-            await _context.SaveChangesAsync();
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+                return NotFound("Usuário não encontrado.");
 
+            // Atualiza os campos necessários
+            usuario.Nome = usuarioAtualizado.Nome;
+            usuario.Email = usuarioAtualizado.Email;
+            usuario.Senha = usuarioAtualizado.Senha;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);
             if (usuario == null)
             {
-                return NotFound();
+                return NotFound("Usuario não encontrado");
             }
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();
