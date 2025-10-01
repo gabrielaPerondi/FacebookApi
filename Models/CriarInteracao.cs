@@ -8,7 +8,8 @@ namespace FacebookDb.Models
     public class CriarInteracaoDTO
     {
         public int PostId { get; set; }
-        public string Tipo { get; set; }
+        public int UsuarioId { get; set; }
+        public string? Tipo { get; set; }
         public string? Texto { get; set; }
     }
 }

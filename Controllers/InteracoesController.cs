@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FacebookDb.Context;
@@ -7,7 +6,7 @@ using FacebookDb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacebookApi.Controllers
+namespace FacebookDb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -20,8 +19,7 @@ namespace FacebookApi.Controllers
             _context = context;
         }
 
-        // POST: api/Interacoes
-        // Cria uma interação (curtir ou comentar)
+        // POST (curtir ou comentar)
         [HttpPost]
         public async Task<IActionResult> CriarInteracao([FromBody] CriarInteracaoDTO dto)
         {
@@ -30,52 +28,103 @@ namespace FacebookApi.Controllers
             if (post == null)
                 return NotFound("Post não encontrado.");
 
+            // Verifica se o usuário existe
+            var usuario = await _context.Usuarios.FindAsync(dto.UsuarioId);
+            if (usuario == null)
+                return BadRequest("Usuário inválido.");
+
+            // Evita curtida duplicada
+            if (dto.Tipo == "curtida")
+            {
+                var jaCurtiu = await _context.Interacaos
+                    .AnyAsync(i => i.PostId == dto.PostId && i.UsuarioId == dto.UsuarioId && i.Tipo == "curtida");
+
+                if (jaCurtiu)
+                    return BadRequest("Usuário já curtiu este post.");
+            }
+
             var interacao = new Interacao
             {
                 PostId = dto.PostId,
+                UsuarioId = dto.UsuarioId,
                 Tipo = dto.Tipo,
                 Texto = dto.Texto,
-                DataCriacao = DateTime.Now,
+                DataCriacao = DateTime.Now
             };
 
             _context.Interacaos.Add(interacao);
             await _context.SaveChangesAsync();
 
-            return Ok(
-                new
-                {
-                    interacao.Id,
-                    interacao.Tipo,
-                    interacao.Texto,
-                    interacao.PostId,
-                    interacao.DataCriacao,
-                }
-            );
+            return Ok(new
+            {
+                interacao.Id,
+                interacao.Tipo,
+                interacao.Texto,
+                interacao.PostId,
+                interacao.UsuarioId,
+                interacao.DataCriacao
+            });
         }
 
-        // GET: api/Interacoes/{postId}
-        // Retorna todas interações de um post
-        [HttpGet("{postId}")]
+        // GET interações de um post
+        [HttpGet("post/{postId}")]
         public async Task<IActionResult> GetInteracoesDoPost(int postId)
         {
-            var interacoes = await _context
-                .Interacaos.Where(i => i.PostId == postId)
+            var interacoes = await _context.Interacaos
+                .Where(i => i.PostId == postId)
+                .Include(i => i.Usuario)
                 .OrderByDescending(i => i.DataCriacao)
                 .ToListAsync();
 
             return Ok(interacoes);
         }
 
-        // DELETE: api/Interacoes/{id}
-        // Remove uma interação específica
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInteracao(int id)
+        // GET todas as interações
+        [HttpGet]
+        public IActionResult GetList()
+        {
+            return Ok(_context.Interacaos.Include(i => i.Usuario));
+        }
+
+        // Verificar se usuário já curtiu
+        [HttpGet("verificarCurtida/{postId}/{usuarioId}")]
+        public async Task<IActionResult> VerificarCurtida(int postId, int usuarioId)
+        {
+            var existe = await _context.Interacaos
+                .AnyAsync(i => i.PostId == postId && i.UsuarioId == usuarioId && i.Tipo == "curtida");
+
+            return Ok(existe);
+        }
+
+        // DELETE interação********* ESTA DANDO ERRO 
+        [HttpDelete("{id}/{usuarioId}")]
+        public async Task<IActionResult> DeleteInteracao(int id, int usuarioId)
         {
             var interacao = await _context.Interacaos.FindAsync(id);
             if (interacao == null)
                 return NotFound();
 
+            // Só o dono pode deletar
+            if (interacao.UsuarioId != usuarioId)
+                return Forbid("Você não pode excluir a interação de outro usuário.");
+
             _context.Interacaos.Remove(interacao);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE curtida
+        [HttpDelete("descurtir/{postId}/{usuarioId}")]
+        public async Task<IActionResult> Descurtir(int postId, int usuarioId)
+        {
+            var curtida = await _context.Interacaos
+                .FirstOrDefaultAsync(i => i.PostId == postId && i.UsuarioId == usuarioId && i.Tipo == "curtida");
+
+            if (curtida == null)
+                return NotFound("Curtida não encontrada.");
+
+            _context.Interacaos.Remove(curtida);
             await _context.SaveChangesAsync();
 
             return NoContent();

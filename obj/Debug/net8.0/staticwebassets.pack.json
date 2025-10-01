@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\037687a4-1276-474c-963b-f16e19d07dda.jfif",
+      "PackagePath": "staticwebassets\\images\\037687a4-1276-474c-963b-f16e19d07dda.jfif"
+    },
+    {
       "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\090fac7c-1a5a-4295-a747-739965523a58.png",
       "PackagePath": "staticwebassets\\images\\090fac7c-1a5a-4295-a747-739965523a58.png"
     },
@@ -25,12 +29,20 @@
       "PackagePath": "staticwebassets\\images\\599f39b2-ebda-4bfc-9545-8be75f61790f.png"
     },
     {
+      "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\841eebf7-ccd4-49fe-a26e-320da867d275.png",
+      "PackagePath": "staticwebassets\\images\\841eebf7-ccd4-49fe-a26e-320da867d275.png"
+    },
+    {
       "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png",
       "PackagePath": "staticwebassets\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png"
     },
     {
-      "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\affd608e-d7e8-498e-ba82-51546426f42d.png",
-      "PackagePath": "staticwebassets\\images\\affd608e-d7e8-498e-ba82-51546426f42d.png"
+      "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\a07e915b-14c5-4613-a9cd-5e492e79a715.png",
+      "PackagePath": "staticwebassets\\images\\a07e915b-14c5-4613-a9cd-5e492e79a715.png"
+    },
+    {
+      "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\b50302a4-0007-46f3-af1a-8b9e2428fc1c.jfif",
+      "PackagePath": "staticwebassets\\images\\b50302a4-0007-46f3-af1a-8b9e2428fc1c.jfif"
     },
     {
       "Id": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\facebook.png",

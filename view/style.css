@@ -55,3 +55,8 @@ button:hover {
   color: white;
   text-decoration: none;
 }
+
+.btn-like.liked {
+  color: #1877f2;
+  font-weight: bold;
+}

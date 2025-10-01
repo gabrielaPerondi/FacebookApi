@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "/u14piFwJ2461S4pQ1D25bPPRzyE6ykaqf/tFqEQyHc=",
+  "Hash": "xeogx3ihMv+u50+j6f7rbZ/ITMMFxGHSOFcGWvbF82s=",
   "Source": "FacebookDb",
   "BasePath": "_content/FacebookDb",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\037687a4-1276-474c-963b-f16e19d07dda.jfif",
+      "SourceId": "FacebookDb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
+      "BasePath": "_content/FacebookDb",
+      "RelativePath": "images/037687a4-1276-474c-963b-f16e19d07dda.jfif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\037687a4-1276-474c-963b-f16e19d07dda.jfif"
+    },
     {
       "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\090fac7c-1a5a-4295-a747-739965523a58.png",
       "SourceId": "FacebookDb",
@@ -131,6 +150,25 @@
       "OriginalItemSpec": "wwwroot\\images\\599f39b2-ebda-4bfc-9545-8be75f61790f.png"
     },
     {
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\841eebf7-ccd4-49fe-a26e-320da867d275.png",
+      "SourceId": "FacebookDb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
+      "BasePath": "_content/FacebookDb",
+      "RelativePath": "images/841eebf7-ccd4-49fe-a26e-320da867d275.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\841eebf7-ccd4-49fe-a26e-320da867d275.png"
+    },
+    {
       "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
@@ -150,12 +188,12 @@
       "OriginalItemSpec": "wwwroot\\images\\875eba83-cb10-48f1-9e5a-ee0806a822bf.png"
     },
     {
-      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\affd608e-d7e8-498e-ba82-51546426f42d.png",
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\a07e915b-14c5-4613-a9cd-5e492e79a715.png",
       "SourceId": "FacebookDb",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
       "BasePath": "_content/FacebookDb",
-      "RelativePath": "images/affd608e-d7e8-498e-ba82-51546426f42d.png",
+      "RelativePath": "images/a07e915b-14c5-4613-a9cd-5e492e79a715.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -166,7 +204,26 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\affd608e-d7e8-498e-ba82-51546426f42d.png"
+      "OriginalItemSpec": "wwwroot\\images\\a07e915b-14c5-4613-a9cd-5e492e79a715.png"
+    },
+    {
+      "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\b50302a4-0007-46f3-af1a-8b9e2428fc1c.jfif",
+      "SourceId": "FacebookDb",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\",
+      "BasePath": "_content/FacebookDb",
+      "RelativePath": "images/b50302a4-0007-46f3-af1a-8b9e2428fc1c.jfif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\b50302a4-0007-46f3-af1a-8b9e2428fc1c.jfif"
     },
     {
       "Identity": "C:\\Users\\429410624\\Documents\\API\\FacebookApi\\wwwroot\\images\\facebook.png",
