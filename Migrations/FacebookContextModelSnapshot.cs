@@ -40,7 +40,6 @@ namespace FacebookDb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tipo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
@@ -52,7 +51,7 @@ namespace FacebookDb.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Interacaos");
+                    b.ToTable("Interacaos", (string)null);
                 });
 
             modelBuilder.Entity("FacebookDb.Models.Post", b =>
@@ -79,7 +78,7 @@ namespace FacebookDb.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("FacebookDb.Models.Usuario", b =>
@@ -108,7 +107,7 @@ namespace FacebookDb.Migrations
                         .IsUnique()
                         .HasFilter("[Email] IS NOT NULL");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("FacebookDb.Models.Interacao", b =>

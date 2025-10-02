@@ -120,32 +120,42 @@ async function carregarPosts() {
       const div = document.createElement("div");
       div.className = "post";
       div.innerHTML = `
-        <p><strong>Usuário:</strong> ${post.usuario?.nome ?? "Desconhecido"}</p>
-        <p><strong>Legenda:</strong> ${post.legenda}</p>
-        ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" width="200" />` : ""}
-        
-        <button class="btn-like ${usuarioCurtiu ? 'liked' : ''}" data-id="${post.id}">
-          Curtir (${curtidas})
-        </button>
-
-        <div class="comentarios">
-          ${comentarios.map(c => `<p><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</p>`).join('')}
+        <div class="post-header">
+          <div>
+            <span class="username">${post.usuario?.nome ?? "Desconhecido"}</span><br>
+            <span class="post-subtitle">${post.legenda}</span>
+          </div>
         </div>
 
-        <input type="text" id="comentario-${post.id}" placeholder="Escreva um comentário..." />
-        <button class="btn-comentar" data-id="${post.id}">Comentar</button>
+        ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" alt="imagem do post" />` : ""}
+
+        <div class="actions">
+          <button class="btn-like ${usuarioCurtiu ? 'liked' : ''}" data-id="${post.id}">
+            Curtir (${curtidas})
+          </button>
+          <button class="btn-delete" data-id="${post.id}">Excluir</button>
+        </div>
+
         <div class="comentarios">
-  ${comentarios.map(c => `
-    <p>
-      <strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}
-      ${c.usuario?.id == usuarioId ? `<button class="btn-delete-comentario" data-id="${c.id}">x</button>` : ''}
-    </p>
-  `).join('')}
-</div>
+          ${comentarios.map(c => `
+            <div class="comment">
+              ${c.usuario?.fotoUrl 
+                ? `<img src="http://localhost:5295${c.usuario.fotoUrl}" class="avatar-small" alt="." />` 
+                : `<img src="https://via.placeholder.com/28" class="avatar-small" alt="." />`}
+              <span><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</span>
+              ${c.usuario?.id == usuarioId 
+                ? `<button class="btn-delete-comentario" data-id="${c.id}">Excluir</button>` 
+                : ""}
+            </div>
+          `).join("")}
+        </div>
 
-
-        <button class="btn-delete" data-id="${post.id}">Excluir</button>
+        <div class="comentar-box">
+          <input type="text" id="comentario-${post.id}" placeholder="Escreva um comentário..." />
+          <button class="btn-comentar" data-id="${post.id}">Comentar</button>
+        </div>
       `;
+
       container.appendChild(div);
     }
 
@@ -160,32 +170,23 @@ async function carregarPosts() {
       btn.addEventListener('click', async () => {
         const postId = btn.dataset.id;
         const comentario = document.getElementById(`comentario-${postId}`).value;
-        if (!comentario.trim()) {
-          alert("Digite um comentário!");
-          return;
-        }
+        if (!comentario.trim()) return alert("Digite um comentário!");
         await comentarPost(postId, usuarioId, comentario);
         carregarPosts();
       });
     });
-    // Botões de deletar comentário
+
     container.querySelectorAll('.btn-delete-comentario').forEach(btn => {
       btn.addEventListener('click', async () => {
         const comentarioId = btn.dataset.id;
         if (!confirm("Deseja excluir este comentário?")) return;
-
         try {
           const response = await fetch(`${API_INTERACAO}/${comentarioId}/${usuarioId}`, {
             method: "DELETE"
           });
-
           if (!response.ok) throw new Error("Erro ao deletar comentário");
-          console.log("Comentário deletado!");
-
-          // Remove o comentário da tela sem recarregar tudo
           btn.parentElement.remove();
         } catch (err) {
-          console.error(err);
           alert(err.message);
         }
       });
@@ -201,6 +202,7 @@ async function carregarPosts() {
     container.innerHTML = `<p>${err.message}</p>`;
   }
 }
+
 
 
 

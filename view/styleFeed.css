@@ -1,0 +1,228 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1c1e21;
+  line-height: 1.5;
+}
+
+/* Cabeçalho */
+.fb-header {
+  background: #1877f2;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.fb-header h1 {
+  font-size: 22px;
+}
+
+.fb-header ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+.fb-header a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.fb-header a:hover {
+  text-decoration: underline;
+}
+
+/* Container */
+main {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* Card genérico */
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+/* Criar post */
+#create-post h2 {
+  margin-bottom: 10px;
+}
+
+#create-post input,
+#create-post button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+#create-post button {
+  background: #1877f2;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#create-post button:hover {
+  background: #145dbf;
+}
+
+/* Post do feed */
+.post {
+  background: white;
+  border-radius: 10px;
+  padding: 12px 15px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.post .post-header {
+  font-weight: bold;
+  color: #050505;
+  margin-bottom: 5px;
+}
+
+.post .post-subtitle {
+  font-size: 14px;
+  color: #65676b;
+  margin-bottom: 10px;
+}
+
+.post img {
+  width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+/* Botões das interações */
+.post .actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.post button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 6px;
+  border: none;
+  background: #e4e6eb;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.post button:hover {
+  background: #d8dadf;
+}
+
+.btn-like.liked {
+  color: #1877f2;
+  font-weight: bold;
+}
+
+/* Comentários */
+.comentarios {
+  margin-top: 10px;
+}
+
+.comment {
+  background: #f0f2f5;
+  padding: 8px 12px;
+  border-radius: 15px;
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.comment strong {
+  color: #050505;
+}
+
+.comment .btn-delete-comentario {
+  background: transparent;
+  color: #65676b;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.comment .btn-delete-comentario:hover {
+  text-decoration: underline;
+}
+
+/* Campo comentar */
+.comentar-box {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.comentar-box input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.comentar-box button {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  background: #1877f2;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comentar-box button:hover {
+  background: #145dbf;
+}
+
+#create-post input,
+#create-post button {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+#create-post button {
+  background: #1877f2;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#create-post button:hover {
+  background: #145dbf;
+}

@@ -13,6 +13,5 @@ namespace FacebookDb.Models
         public string? Senha { get; set; }
         public DateTime Datacadastro { get; set; } = DateTime.Now;
         
-    
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FacebookDb.Migrations
 {
     [DbContext(typeof(FacebookContext))]
-    [Migration("20251001181206_CorrigirInteracaoUsuario")]
-    partial class CorrigirInteracaoUsuario
+    [Migration("20251002190117_CorrigirDbMig")]
+    partial class CorrigirDbMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,7 +43,6 @@ namespace FacebookDb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Tipo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
