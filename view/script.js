@@ -66,12 +66,13 @@ if (postForm) {
     const foto = document.getElementById("foto").files[0];
 
     if (!usuarioId) {
-      alert("Você precisa estar logado!");
+      alert("Você precisa estar logado");
       return;
     }
+    if (!legenda && !foto) return alert("Digite algo ou adicione uma foto")
 
     const formData = new FormData();
-    formData.append("Legenda", legenda);
+    if (legenda) formData.append("Legenda", legenda);
     formData.append("UsuarioId", usuarioId);
     if (foto) formData.append("file", foto);
 
@@ -93,6 +94,31 @@ if (postForm) {
   carregarPosts();
 }
 
+
+
+  const searchInput = document.getElementById("searchUser");
+  const btnSearch = document.getElementById("btnSearchUser");
+  let searchTerm = "";
+
+  // Pesquisa quando clicar no botão
+  if (btnSearch) {
+    btnSearch.addEventListener("click", () => {
+      searchTerm = searchInput.value.trim().toLowerCase();
+      carregarPosts();
+    });
+  }
+
+  // Também pesquisa quando apertar Enter no input
+  if (searchInput) {
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        searchTerm = searchInput.value.trim().toLowerCase();
+        carregarPosts();
+      }
+    });
+  }
+
+
 // Carregar posts
 async function carregarPosts() {
   const container = document.getElementById("postsContainer");
@@ -108,6 +134,11 @@ async function carregarPosts() {
     const usuarioId = localStorage.getItem("usuarioId");
 
     for (const post of posts) {
+      // Filtra pelo termo de pesquisa, se existir
+      if (searchTerm && !(post.usuario?.nome ?? "").toLowerCase().includes(searchTerm)) {
+        continue; // pula para o próximo post
+      }
+
       const interacoesResp = await fetch(`${API_INTERACAO}/post/${post.id}`);
       const interacoes = interacoesResp.ok ? await interacoesResp.json() : [];
 
@@ -120,62 +151,73 @@ async function carregarPosts() {
       const div = document.createElement("div");
       div.className = "post";
       div.innerHTML = `
-        <div class="post-header">
-          <div>
-            <span class="username">${post.usuario?.nome ?? "Desconhecido"}</span><br>
-            <span class="post-subtitle">${post.legenda}</span>
-          </div>
-        </div>
+    <div class="post-header">
+      <div>
+        <span class="username">${post.usuario?.nome ?? "Desconhecido"}</span><br>
+        <span class="post-subtitle">${post.legenda}</span>
+      </div>
+    </div>
 
-        ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" alt="imagem do post" />` : ""}
+    ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" alt="imagem do post" />` : ""}
 
-        <div class="actions">
-          <button class="btn-like ${usuarioCurtiu ? 'liked' : ''}" data-id="${post.id}">
-            Curtir (${curtidas})
-          </button>
-          <button class="btn-delete" data-id="${post.id}">Excluir</button>
-        </div>
+    <div class="actions">
+      <button class="btn-like ${usuarioCurtiu ? 'liked' : ''}" data-id="${post.id}">
+        Curtir (${curtidas})
+      </button>
+      ${post.usuario?.id == usuarioId
+          ? `<button class="btn-delete" data-id="${post.id}">Excluir</button>`
+          : ""}
+    </div>
 
-        <div class="comentarios">
-          ${comentarios.map(c => `
-            <div class="comment">
-              ${c.usuario?.fotoUrl 
-                ? `<img src="http://localhost:5295${c.usuario.fotoUrl}" class="avatar-small" alt="." />` 
-                : `<img src="https://via.placeholder.com/28" class="avatar-small" alt="." />`}
-              <span><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</span>
-              ${c.usuario?.id == usuarioId 
-                ? `<button class="btn-delete-comentario" data-id="${c.id}">Excluir</button>` 
-                : ""}
-            </div>
-          `).join("")}
+    <div class="comentarios">
+      ${comentarios.map(c => `
+        <div class="comment">
+          ${c.usuario?.fotoUrl
+              ? `<img src="http://localhost:5295${c.usuario.fotoUrl}" class="avatar-small" alt="." />`
+              : `<img src="https://via.placeholder.com/28" class="avatar-small" alt="." />`}
+          <span><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</span>
+          ${c.usuario?.id == usuarioId
+              ? `<button class="btn-delete-comentario" data-id="${c.id}">Excluir</button>`
+              : ""}
         </div>
+      `).join("")}
+    </div>
 
-        <div class="comentar-box">
-          <input type="text" id="comentario-${post.id}" placeholder="Escreva um comentário..." />
-          <button class="btn-comentar" data-id="${post.id}">Comentar</button>
-        </div>
-      `;
+    <div class="comentar-box">
+      <input type="text" id="comentario-${post.id}" placeholder="Escreva um comentário..." />
+      <button type="button" class="btn-comentar" data-id="${post.id}">Comentar</button>
+    </div>
+  `;
 
       container.appendChild(div);
     }
 
-    // Eventos
+    // Curtir
     container.querySelectorAll('.btn-like').forEach(btn => {
       btn.addEventListener('click', async () => {
         await curtirPost(btn.dataset.id, usuarioId, btn);
       });
     });
 
+    // Comentar
     container.querySelectorAll('.btn-comentar').forEach(btn => {
       btn.addEventListener('click', async () => {
         const postId = btn.dataset.id;
         const comentario = document.getElementById(`comentario-${postId}`).value;
         if (!comentario.trim()) return alert("Digite um comentário!");
+
+        // 👇 salva a posição da tela
+        const scrollPos = window.scrollY;
+
         await comentarPost(postId, usuarioId, comentario);
-        carregarPosts();
+        await carregarPosts();
+
+        // 👇 volta para a posição que estava antes
+        window.scrollTo(0, scrollPos);
       });
     });
 
+    // Excluir comentário
     container.querySelectorAll('.btn-delete-comentario').forEach(btn => {
       btn.addEventListener('click', async () => {
         const comentarioId = btn.dataset.id;
@@ -192,6 +234,7 @@ async function carregarPosts() {
       });
     });
 
+    // Excluir post
     container.querySelectorAll('.btn-delete').forEach(btn => {
       btn.addEventListener('click', async () => {
         await deletarPost(btn.dataset.id);
@@ -203,24 +246,26 @@ async function carregarPosts() {
   }
 }
 
-
-
-
 // Deletar post
 async function deletarPost(id) {
+  const usuarioId = localStorage.getItem("usuarioId");
   if (!confirm(`Deseja excluir o post ${id}?`)) return;
 
   try {
-    const response = await fetch(`${API_POST}/${id}`, {
+    const response = await fetch(`${API_POST}/${id}/${usuarioId}`, {
       method: "DELETE"
     });
-    if (!response.ok) throw new Error("Erro ao deletar post");
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || "Erro ao deletar post");
+    }
     alert("Post deletado!");
     carregarPosts();
   } catch (err) {
     alert(err.message);
   }
 }
+
 //Curtida do post no feed
 async function curtirPost(postId, usuarioId, botao) {
   try {
@@ -297,4 +342,19 @@ async function comentarPost(postId, usuarioId, comentario) {
     console.error("Erro ao comentar:", await response.text());
   }
 }
+
+//BotaO x PESQUISA
+const searchX = document.getElementById("searchUser");
+const clearBtn = document.getElementById("clearSearch");
+
+searchX.addEventListener("input", () => {
+  clearBtn.style.display = searchX.value.length > 0 ? "inline" : "none";
+});
+
+clearBtn.addEventListener("click", () => {
+  searchX.value = "";
+  clearBtn.style.display = "none";
+  searchX.focus();
+});
+
 

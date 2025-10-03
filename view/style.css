@@ -1,62 +1,123 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f0f2f5;
+/* Reset básico */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
+/* Estilo global */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f0f2f5;
+  color: #1c1e21;
+  line-height: 1.6;
+}
+
+/* Container centralizado */
 .container {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 25px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Inputs e botões */
 input, button {
   display: block;
   width: 100%;
-  margin: 10px 0;
-  padding: 10px;
+  margin: 12px 0;
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
+input:focus {
+  border-color: #1877f2;
+  box-shadow: 0 0 4px rgba(24, 119, 242, 0.3);
+}
+
+/* Botão */
 button {
   background: #1877f2;
   color: white;
   border: none;
-  border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 button:hover {
   background: #145dbf;
 }
 
+/* Header estilo Facebook */
 .fb-header {
   background: #1877f2;
   color: white;
-  padding: 15px;
+  padding: 15px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.fb-header h1 {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
 }
 
 .fb-header ul {
   list-style: none;
   display: flex;
-  gap: 20px;
-  margin: 0;
-  padding: 0;
+  gap: 25px;
 }
 
 .fb-header a {
   color: white;
   text-decoration: none;
+  font-size: 15px;
+  transition: opacity 0.2s ease;
+}
+
+.fb-header a:hover {
+  opacity: 0.8;
+}
+
+/* Botão de curtir */
+.btn-like {
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-like:hover {
+  color: #1877f2;
+  transform: scale(1.05);
 }
 
 .btn-like.liked {
   color: #1877f2;
   font-weight: bold;
+}
+
+/* Espaçamento entre seções */
+section {
+  margin: 20px 0;
+  padding: 15px;
 }

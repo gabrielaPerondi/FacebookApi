@@ -20,11 +20,19 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.fb-header h1 {
-  font-size: 22px;
+#Face {
+  list-style: none;
+  font-size: 30px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+
+}
+
+.fb-header Face {
+  font-size: 6px;
 }
 
 .fb-header ul {
@@ -55,7 +63,7 @@ main {
   background: white;
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -92,7 +100,7 @@ main {
   background: white;
   border-radius: 10px;
   padding: 12px 15px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -225,4 +233,24 @@ main {
 
 #create-post button:hover {
   background: #145dbf;
+}
+
+/* para o x do pesquisar */
+.search-box {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+#clearSearch {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: none;
+  /* inicia escondido */
 }

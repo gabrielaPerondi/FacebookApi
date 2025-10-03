@@ -42,9 +42,10 @@ namespace FacebookDb.Controllers
         }
 
         // POST****************
-         [HttpPost("upload")]
+        [HttpPost("upload")]
         public async Task<IActionResult> CreateAsync([FromForm] Criarpost criarpost, IFormFile file)
-        {
+        {           
+            
             try
             {
                 var post = new Post
@@ -122,26 +123,34 @@ namespace FacebookDb.Controllers
             return Ok(postDb); // Retorna o post atualizado
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletarPost(int id)
+        [HttpDelete("{id}/{usuarioId}")]
+        public async Task<IActionResult> DeletarPost(int id, int usuarioId)
         {
-            var Post = await _context.Posts.FindAsync(id);
-            if (Post == null)
+            var post = await _context.Posts.FindAsync(id);
+            if (post == null)
             {
                 return NotFound(new { message = $"Post com ID {id} não encontrado." });
             }
-            if (!string.IsNullOrEmpty(Post.FotoUrl))
+
+            // Só permite se o usuário do post for o mesmo
+            if (post.UsuarioId != usuarioId)
+            {
+                return Forbid("Você não tem permissão para excluir este post.");
+            }
+
+            if (!string.IsNullOrEmpty(post.FotoUrl))
             {
                 var filePath = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                 "wwwroot",
-                Post.FotoUrl.TrimStart('/'));
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    post.FotoUrl.TrimStart('/'));
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
                 }
             }
-            _context.Posts.Remove(Post);
+
+            _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
             return Ok(new { message = "Post deletado com sucesso", postId = id });
         }
