@@ -2,7 +2,16 @@ const API_FACEBOOK = "http://localhost:5295/api/Facebook";
 const API_POST = "http://localhost:5295/api/Post";
 const API_INTERACAO = "http://localhost:5295/api/Interacoes";
 
-// CADASTRO
+//CADASTRO 
+const toggleSenha = document.getElementById('toggleSenha');
+const senhaInput = document.getElementById('senha');
+
+if (toggleSenha && senhaInput) {
+  toggleSenha.addEventListener('change', () => {
+    senhaInput.type = toggleSenha.checked ? 'text' : 'password';
+  });
+}
+
 const usuarioForm = document.getElementById("cadastroForm");
 if (usuarioForm) {
   usuarioForm.addEventListener("submit", async (e) => {
@@ -15,22 +24,18 @@ if (usuarioForm) {
       const response = await fetch(`${API_FACEBOOK}/CriaUsuario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Nome: nome,
-          Email: email,
-          Senha: senha
-        })
+        body: JSON.stringify({ Nome: nome, Email: email, Senha: senha })
       });
       if (!response.ok) throw new Error("Erro ao cadastrar usuário");
       alert("Usuário cadastrado!");
-      window.location.href = "login.html"; // manda para o  login
+      window.location.href = "login.html";
     } catch (err) {
       alert(err.message);
     }
   });
 }
 
-// LOGIN
+//  LOGIN 
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
@@ -49,14 +54,14 @@ if (loginForm) {
       const usuario = await response.json();
 
       localStorage.setItem("usuarioId", usuario.id);
-      window.location.href = "perfil.html"; // vai para feed
+      window.location.href = "perfil.html";
     } catch (err) {
       alert(err.message);
     }
   });
 }
 
-// PERFIL (postar)
+// -POSTAR
 const postForm = document.getElementById("postForm");
 if (postForm) {
   postForm.addEventListener("submit", async (e) => {
@@ -65,11 +70,8 @@ if (postForm) {
     const usuarioId = localStorage.getItem("usuarioId");
     const foto = document.getElementById("foto").files[0];
 
-    if (!usuarioId) {
-      alert("Você precisa estar logado");
-      return;
-    }
-    if (!legenda && !foto) return alert("Digite algo ou adicione uma foto")
+    if (!usuarioId) return alert("Você precisa estar logado");
+    if (!legenda && !foto) return alert("Digite algo ou adicione uma foto");
 
     const formData = new FormData();
     if (legenda) formData.append("Legenda", legenda);
@@ -77,10 +79,7 @@ if (postForm) {
     if (foto) formData.append("file", foto);
 
     try {
-      const response = await fetch(`${API_POST}/upload`, {
-        method: "POST",
-        body: formData
-      });
+      const response = await fetch(`${API_POST}/upload`, { method: "POST", body: formData });
       if (!response.ok) throw new Error("Erro ao criar post");
 
       alert("Post criado!");
@@ -94,138 +93,131 @@ if (postForm) {
   carregarPosts();
 }
 
+//  PESQUISA
+let searchTerm = "";
+const searchInput = document.getElementById("searchUser");
+const btnSearch = document.getElementById("btnSearchUser");
+const clearBtn = document.getElementById("clearSearch");
 
+if (btnSearch) {
+  btnSearch.addEventListener("click", () => {
+    searchTerm = searchInput.value.trim().toLowerCase();
+    carregarPosts();
+  });
+}
 
-  const searchInput = document.getElementById("searchUser");
-  const btnSearch = document.getElementById("btnSearchUser");
-  let searchTerm = "";
-
-  // Pesquisa quando clicar no botão
-  if (btnSearch) {
-    btnSearch.addEventListener("click", () => {
+if (searchInput) {
+  searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
       searchTerm = searchInput.value.trim().toLowerCase();
       carregarPosts();
-    });
-  }
+    }
+  });
 
-  // Também pesquisa quando apertar Enter no input
-  if (searchInput) {
-    searchInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        searchTerm = searchInput.value.trim().toLowerCase();
-        carregarPosts();
-      }
-    });
-  }
+  searchInput.addEventListener("input", () => {
+    clearBtn.style.display = searchInput.value.length > 0 ? "inline" : "none";
+  });
+}
 
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    clearBtn.style.display = "none";
+    searchInput.focus();
+    searchTerm = "";
+    carregarPosts();
+  });
+}
 
-// Carregar posts
+// carredar post-
 async function carregarPosts() {
   const container = document.getElementById("postsContainer");
   if (!container) return;
 
   container.innerHTML = "";
+  const usuarioId = localStorage.getItem("usuarioId");
 
   try {
     const response = await fetch(API_POST);
     if (!response.ok) throw new Error("Erro ao buscar posts");
 
-    const posts = await response.json();
-    const usuarioId = localStorage.getItem("usuarioId");
+    let posts = await response.json();
+
+    // Mostrar posts mais recentes primeiro
+    posts = posts.reverse();
 
     for (const post of posts) {
-      // Filtra pelo termo de pesquisa, se existir
-      if (searchTerm && !(post.usuario?.nome ?? "").toLowerCase().includes(searchTerm)) {
-        continue; // pula para o próximo post
-      }
+      if (searchTerm && !(post.usuario?.nome ?? "").toLowerCase().includes(searchTerm)) continue;
 
       const interacoesResp = await fetch(`${API_INTERACAO}/post/${post.id}`);
       const interacoes = interacoesResp.ok ? await interacoesResp.json() : [];
 
       const curtidas = interacoes.filter(i => i.tipo === "curtida").length;
       const comentarios = interacoes.filter(i => i.tipo === "comentario");
-      const usuarioCurtiu = interacoes.some(
-        i => i.tipo === "curtida" && i.usuario?.id == usuarioId
-      );
+      const usuarioCurtiu = interacoes.some(i => i.tipo === "curtida" && i.usuario?.id == usuarioId);
 
       const div = document.createElement("div");
       div.className = "post";
       div.innerHTML = `
-    <div class="post-header">
-      <div>
-        <span class="username">${post.usuario?.nome ?? "Desconhecido"}</span><br>
-        <span class="post-subtitle">${post.legenda}</span>
-      </div>
-    </div>
-
-    ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" alt="imagem do post" />` : ""}
-
-    <div class="actions">
-      <button class="btn-like ${usuarioCurtiu ? 'liked' : ''}" data-id="${post.id}">
-        Curtir (${curtidas})
-      </button>
-      ${post.usuario?.id == usuarioId
-          ? `<button class="btn-delete" data-id="${post.id}">Excluir</button>`
-          : ""}
-    </div>
-
-    <div class="comentarios">
-      ${comentarios.map(c => `
-        <div class="comment">
-          ${c.usuario?.fotoUrl
-              ? `<img src="http://localhost:5295${c.usuario.fotoUrl}" class="avatar-small" alt="." />`
-              : `<img src="https://via.placeholder.com/28" class="avatar-small" alt="." />`}
-          <span><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</span>
-          ${c.usuario?.id == usuarioId
-              ? `<button class="btn-delete-comentario" data-id="${c.id}">Excluir</button>`
-              : ""}
+        <div class="post-header">
+          <div>
+            <span class="username">${post.usuario?.nome ?? "Desconhecido"}</span><br>
+            <span class="post-subtitle">${post.legenda}</span>
+          </div>
         </div>
-      `).join("")}
-    </div>
 
-    <div class="comentar-box">
-      <input type="text" id="comentario-${post.id}" placeholder="Escreva um comentário..." />
-      <button type="button" class="btn-comentar" data-id="${post.id}">Comentar</button>
-    </div>
-  `;
+        ${post.fotoUrl ? `<img src="http://localhost:5295${post.fotoUrl}" alt="imagem do post" />` : ""}
+
+        <div class="actions">
+          <button class="btn-like ${usuarioCurtiu ? 'liked' : ''}" data-id="${post.id}">
+            Curtir (${curtidas})
+          </button>
+          ${post.usuario?.id == usuarioId ? `<button class="btn-delete" data-id="${post.id}">Excluir</button>` : ""}
+        </div>
+
+        <div class="comentarios">
+          ${comentarios.map(c => `
+            <div class="comment">
+              
+              <span><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</span>
+              ${c.usuario?.id == usuarioId ? `<button class="btn-delete-comentario" data-id="${c.id}">Excluir</button>` : ""}
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="comentar-box">
+          <input type="text" id="comentario-${post.id}" placeholder="Escreva um comentário..." />
+          <button type="button" class="btn-comentar" data-id="${post.id}">Comentar</button>
+        </div>
+      `;
 
       container.appendChild(div);
     }
 
-    // Curtir
+    //eventos
     container.querySelectorAll('.btn-like').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        await curtirPost(btn.dataset.id, usuarioId, btn);
-      });
+      btn.addEventListener('click', async () => await curtirPost(btn.dataset.id, usuarioId, btn));
     });
 
-    // Comentar
     container.querySelectorAll('.btn-comentar').forEach(btn => {
       btn.addEventListener('click', async () => {
         const postId = btn.dataset.id;
         const comentario = document.getElementById(`comentario-${postId}`).value;
         if (!comentario.trim()) return alert("Digite um comentário!");
 
-        // 👇 salva a posição da tela
         const scrollPos = window.scrollY;
-
         await comentarPost(postId, usuarioId, comentario);
         await carregarPosts();
-
-        // 👇 volta para a posição que estava antes
         window.scrollTo(0, scrollPos);
       });
     });
 
-    // Excluir comentário
     container.querySelectorAll('.btn-delete-comentario').forEach(btn => {
       btn.addEventListener('click', async () => {
         const comentarioId = btn.dataset.id;
         if (!confirm("Deseja excluir este comentário?")) return;
         try {
-          const response = await fetch(`${API_INTERACAO}/${comentarioId}/${usuarioId}`, {
-            method: "DELETE"
-          });
+          const response = await fetch(`${API_INTERACAO}/${comentarioId}/${usuarioId}`, { method: "DELETE" });
           if (!response.ok) throw new Error("Erro ao deletar comentário");
           btn.parentElement.remove();
         } catch (err) {
@@ -234,11 +226,8 @@ async function carregarPosts() {
       });
     });
 
-    // Excluir post
     container.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        await deletarPost(btn.dataset.id);
-      });
+      btn.addEventListener('click', async () => await deletarPost(btn.dataset.id));
     });
 
   } catch (err) {
@@ -246,15 +235,13 @@ async function carregarPosts() {
   }
 }
 
-// Deletar post
+// deletar 
 async function deletarPost(id) {
   const usuarioId = localStorage.getItem("usuarioId");
   if (!confirm(`Deseja excluir o post ${id}?`)) return;
 
   try {
-    const response = await fetch(`${API_POST}/${id}/${usuarioId}`, {
-      method: "DELETE"
-    });
+    const response = await fetch(`${API_POST}/${id}/${usuarioId}`, { method: "DELETE" });
     if (!response.ok) {
       const text = await response.text();
       throw new Error(text || "Erro ao deletar post");
@@ -266,95 +253,47 @@ async function deletarPost(id) {
   }
 }
 
-//Curtida do post no feed
+// -curtr
 async function curtirPost(postId, usuarioId, botao) {
   try {
-    const interacoesResp = await fetch(`${API_INTERACAO}/post/${postId}`);// RECEBE O DB DE INTERAÇÃO
-    const interacoes = interacoesResp.ok ? await interacoesResp.json() : [];//ESPERA A RESPOSTA DO JSON/DB
+    const interacoesResp = await fetch(`${API_INTERACAO}/post/${postId}`);
+    const interacoes = interacoesResp.ok ? await interacoesResp.json() : [];
 
-    const usuarioCurtiu = interacoes.some(
-      i => i.tipo === "curtida" && i.usuario?.id == usuarioId
-    );
-
+    const usuarioCurtiu = interacoes.some(i => i.tipo === "curtida" && i.usuario?.id == usuarioId);
     let novaContagem = interacoes.filter(i => i.tipo === "curtida").length;
 
     if (usuarioCurtiu) {
-      // Chama o endpoint descurtir
-      const deleteResp = await fetch(`${API_INTERACAO}/descurtir/${postId}/${usuarioId}`, {
-        method: "DELETE"
-      });
+      const deleteResp = await fetch(`${API_INTERACAO}/descurtir/${postId}/${usuarioId}`, { method: "DELETE" });
       if (!deleteResp.ok) throw new Error("Erro ao remover curtida");
-      console.log("Curtida removida!");
       novaContagem--;
       botao.classList.remove('liked');
     } else {
-      // Curtir
-      const interacao = {
-        Tipo: "curtida",
-        Texto: null,
-        PostId: postId,
-        UsuarioId: usuarioId
-      };
-
+      const interacao = { Tipo: "curtida", Texto: null, PostId: postId, UsuarioId: usuarioId };
       const response = await fetch(API_INTERACAO, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(interacao)
       });
-
       if (!response.ok) throw new Error("Erro ao curtir post");
-      console.log("Curtida adicionada!");
       novaContagem++;
       botao.classList.add('liked');
     }
 
-    // Atualiza o texto do botão sem recarregar todos os posts
     botao.textContent = `Curtir (${novaContagem})`;
-
   } catch (err) {
     console.error(err);
     alert(err.message);
   }
 }
 
-
 // Comentar
 async function comentarPost(postId, usuarioId, comentario) {
-  const interacao = {
-    tipo: "comentario",
-    texto: comentario,
-    postId: postId,
-    usuarioId: usuarioId
-  };
-
-  const response = await fetch(API_INTERACAO, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(interacao)
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    console.log("Comentário salvo:", data);
-  } else {
-    console.error("Erro ao comentar:", await response.text());
+  try {
+    const interacao = { tipo: "comentario", texto: comentario, postId, usuarioId };
+    const response = await fetch(API_INTERACAO, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(interacao) });
+    if (!response.ok) throw new Error("Erro ao comentar post");
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
   }
 }
-
-//BotaO x PESQUISA
-const searchX = document.getElementById("searchUser");
-const clearBtn = document.getElementById("clearSearch");
-
-searchX.addEventListener("input", () => {
-  clearBtn.style.display = searchX.value.length > 0 ? "inline" : "none";
-});
-
-clearBtn.addEventListener("click", () => {
-  searchX.value = "";
-  clearBtn.style.display = "none";
-  searchX.focus();
-});
-
-

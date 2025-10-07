@@ -2,7 +2,7 @@ const API_FACEBOOK = "http://localhost:5295/api/Facebook";
 const API_POST = "http://localhost:5295/api/Post";
 const API_INTERACAO = "http://localhost:5295/api/Interacoes";
 
-// POST do perfil
+// CRIAR POST NO PERFIl
 const postFormPerfil = document.getElementById("postFormPerfil");
 if (postFormPerfil) {
   postFormPerfil.addEventListener("submit", async (e) => {
@@ -19,9 +19,12 @@ if (postFormPerfil) {
     if (foto) formData.append("file", foto);
 
     try {
-      const response = await fetch(`${API_POST}/upload`, { method: "POST", body: formData });
+      const response = await fetch(`${API_POST}/upload`, {
+        method: "POST",
+        body: formData
+      });
       if (!response.ok) throw new Error("Erro ao criar post");
-      alert("Post criado!");
+      alert("Post criado com sucesso!");
       postFormPerfil.reset();
       carregarMeusPosts();
     } catch (err) {
@@ -30,7 +33,7 @@ if (postFormPerfil) {
   });
 }
 
-// PERFIL: Carregar só os posts do usuário
+// CARREGAR POSTS DO USUÁRIO 
 async function carregarMeusPosts() {
   const container = document.getElementById("postsContainerPerfil");
   if (!container) return;
@@ -43,7 +46,7 @@ async function carregarMeusPosts() {
     if (!response.ok) throw new Error("Erro ao buscar posts");
 
     const posts = await response.json();
-    const meusPosts = posts.filter(post => post.usuario?.id == usuarioId);
+    const meusPosts = posts.filter(p => p.usuario?.id == usuarioId);
 
     for (const post of meusPosts) {
       const interacoesResp = await fetch(`${API_INTERACAO}/post/${post.id}`);
@@ -74,10 +77,7 @@ async function carregarMeusPosts() {
 
         <div class="comentarios">
           ${comentarios.map(c => `
-            <div class="comment">
-              ${c.usuario?.fotoUrl
-                ? `<img src="http://localhost:5295${c.usuario.fotoUrl}" class="avatar-small" alt="." />`
-                : `<img src="https://via.placeholder.com/28" class="avatar-small" alt="." />`}
+            <div class="comentario">
               <span><strong>${c.usuario?.nome ?? "Desconhecido"}:</strong> ${c.texto}</span>
               <button class="btn-delete-comentario" data-id="${c.id}">Excluir</button>
             </div>
@@ -93,47 +93,63 @@ async function carregarMeusPosts() {
       container.appendChild(div);
     }
 
-    // Event delegation: curtir, comentar, excluir comentário e excluir post
-    container.addEventListener('click', async (e) => {
+    // EVENTOS DE INTERAÇÃO
+    container.onclick = async (e) => {
       const target = e.target;
+      const usuarioId = localStorage.getItem("usuarioId");
 
-      if (target.classList.contains('btn-like')) {
+      // Curtir descurtir
+      if (target.classList.contains("btn-like")) {
         await curtirPost(target.dataset.id, usuarioId, target);
       }
 
-      if (target.classList.contains('btn-comentar')) {
+      // Comentar
+      if (target.classList.contains("btn-comentar")) {
         const postId = target.dataset.id;
-        const comentario = document.getElementById(`comentario-${postId}`).value;
-        if (!comentario.trim()) return alert("Digite um comentário!");
+        const comentario = document.getElementById(`comentario-${postId}`).value.trim();
+        if (!comentario) return alert("Digite um comentário!");
         const scrollPos = window.scrollY;
         await comentarPost(postId, usuarioId, comentario);
         await carregarMeusPosts();
         window.scrollTo(0, scrollPos);
       }
 
-      if (target.classList.contains('btn-delete-comentario')) {
+      // Excluir comentário
+      if (target.classList.contains("btn-delete-comentario")) {
         const comentarioId = target.dataset.id;
+
         if (!confirm("Deseja excluir este comentário?")) return;
+
         try {
-          const response = await fetch(`${API_INTERACAO}/${comentarioId}/${usuarioId}`, { method: "DELETE" });
-          if (!response.ok) throw new Error("Erro ao deletar comentário");
-          target.parentElement.remove();
+          const response = await fetch(`${API_INTERACAO}/${comentarioId}/${usuarioId}`, {
+            method: "DELETE"
+          });
+
+          if (!response.ok) {
+            const erro = await response.text();
+            throw new Error(`Erro ao deletar comentário: ${erro}`);
+          }
+
+          const bloco = target.closest(".comentario");
+          if (bloco) bloco.remove();
         } catch (err) {
           alert(err.message);
+          console.error("Erro ao deletar comentário:", err);
         }
       }
 
-      if (target.classList.contains('btn-delete')) {
+      // Excluir 
+      if (target.classList.contains("btn-delete")) {
         await deletarPost(target.dataset.id);
       }
-    });
+    };
 
   } catch (err) {
     container.innerHTML = `<p>${err.message}</p>`;
   }
 }
 
-// Curtir
+// CURTIR deSCURTIR 
 async function curtirPost(postId, usuarioId, botao) {
   try {
     const interacoesResp = await fetch(`${API_INTERACAO}/post/${postId}`);
@@ -146,13 +162,17 @@ async function curtirPost(postId, usuarioId, botao) {
       const deleteResp = await fetch(`${API_INTERACAO}/descurtir/${postId}/${usuarioId}`, { method: "DELETE" });
       if (!deleteResp.ok) throw new Error("Erro ao remover curtida");
       novaContagem--;
-      botao.classList.remove('liked');
+      botao.classList.remove("liked");
     } else {
-      const interacao = { Tipo: "curtida", Texto: null, PostId: postId, UsuarioId: usuarioId };
-      const response = await fetch(API_INTERACAO, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(interacao) });
+      const interacao = { tipo: "curtida", texto: null, postId, usuarioId };
+      const response = await fetch(API_INTERACAO, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(interacao)
+      });
       if (!response.ok) throw new Error("Erro ao curtir post");
       novaContagem++;
-      botao.classList.add('liked');
+      botao.classList.add("liked");
     }
 
     botao.textContent = `Curtir (${novaContagem})`;
@@ -162,11 +182,15 @@ async function curtirPost(postId, usuarioId, botao) {
   }
 }
 
-// Comentar
+// COMENTAR 
 async function comentarPost(postId, usuarioId, comentario) {
   try {
-    const interacao = { tipo: "comentario", texto: comentario, postId: postId, usuarioId: usuarioId };
-    const response = await fetch(API_INTERACAO, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(interacao) });
+    const interacao = { tipo: "comentario", texto: comentario, postId, usuarioId };
+    const response = await fetch(API_INTERACAO, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(interacao)
+    });
     if (!response.ok) throw new Error("Erro ao comentar post");
   } catch (err) {
     console.error(err);
@@ -174,7 +198,7 @@ async function comentarPost(postId, usuarioId, comentario) {
   }
 }
 
-// Deletar post
+// EXCLUIR
 async function deletarPost(id) {
   const usuarioId = localStorage.getItem("usuarioId");
   if (!confirm(`Deseja excluir o post ${id}?`)) return;
@@ -188,7 +212,7 @@ async function deletarPost(id) {
   }
 }
 
-// Inicializa
+
 if (postFormPerfil) {
   carregarMeusPosts();
 }

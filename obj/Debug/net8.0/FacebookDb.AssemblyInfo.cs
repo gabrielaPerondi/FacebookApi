@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FacebookDb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b8abff8706b0e91bcbcb55110cb1f188ddda8850")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+680cb73eb2fe8a9af2487900eb7b949c7b57906f")]
 [assembly: System.Reflection.AssemblyProductAttribute("FacebookDb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FacebookDb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
